@@ -1063,12 +1063,12 @@ async function generate(){
   const prompt = advMode ? buildAdvancedPrompt(topic) : buildStandardPrompt(topic);
 
   try {
-    // ===== OpenRouter API — Verified Working Models =====
+    // ===== OpenRouter API — 100% Free Models Only =====
     const MODELS = [
-      { id: 'nousresearch/hermes-3-llama-3.1-405b:free', name: 'Hermes 3 405B' },
-      { id: 'google/gemini-flash-1.5', name: 'Gemini Flash 1.5' },
       { id: 'meta-llama/llama-3.1-8b-instruct:free', name: 'Llama 3.1 8B' },
-      { id: 'microsoft/phi-3-medium-128k-instruct:free', name: 'Phi 3 Medium' }
+      { id: 'meta-llama/llama-3-8b-instruct:free', name: 'Llama 3 8B' },
+      { id: 'mistralai/mistral-7b-instruct:free', name: 'Mistral 7B' },
+      { id: 'google/gemini-flash-1.5-8b', name: 'Gemini Flash' }
     ];
     
     let data = null;
