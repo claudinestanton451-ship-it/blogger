@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlogMind AI v5 — ناشر بلوجر | Gemini مجاني</title>
+<title>BlogMind AI v4 — ناشر بلوجر | Gemini مجاني</title>
 <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -323,7 +323,7 @@ input[type=datetime-local]{color-scheme:dark;}
   <div class="nav-brand">
     <div class="nav-icon">B</div>
     <div>
-      <div class="nav-name">Blog<span>Mind</span> AI <span class="nav-v">v5</span></div>
+      <div class="nav-name">Blog<span>Mind</span> AI <span class="nav-v">v4</span></div>
     </div>
   </div>
   <div class="nav-pills">
@@ -598,12 +598,11 @@ input[type=datetime-local]{color-scheme:dark;}
       <div class="sethead"><div class="setdot" style="background:#4285f4;"></div>Google Gemini API — 🆓 مجاني</div>
       <div class="setbody">
         <div class="field">
-          <div class="flabel">🔑 Gemini API Key (أو أكتر من مفتاح)</div>
-          <div class="isec"><input type="password" id="cfg-ak" placeholder="AIzaSy..., AIzaBc..., AIzaDe..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
-          <div style="margin-top:8px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.9;">
+          <div class="flabel">🔑 Gemini API Key</div>
+          <div class="isec"><input type="password" id="cfg-ak" placeholder="AIzaSy..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
+          <div style="margin-top:8px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.8;">
             ✅ مجاني 100% — لا يحتاج كريدت كارد<br>
             ✅ 1500 طلب يومياً مجاناً<br>
-            💡 <b>نصيحة:</b> اعمل 3-4 مفاتيح من Gmail مختلفة وحطهم مفصولين بفاصلة — الأداة هتبدل بينهم تلقائياً<br>
             // احصل عليه من: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#4285f4;">aistudio.google.com ↗</a>
           </div>
         </div>
@@ -958,61 +957,32 @@ async function generate(){
 
   showLoader(advMode);
 
-  // تأخير عشوائي لمحاكاة سلوك بشري (2-5 ثواني)
-  const delay = 2000 + Math.random() * 3000;
-  await new Promise(r => setTimeout(r, delay));
-
   const prompt = advMode ? buildAdvancedPrompt(topic) : buildStandardPrompt(topic);
 
   try {
-    // ===== Multi-Key Rotation =====
-    // إضافة مفاتيح متعددة مفصولة بفاصلة في الإعدادات
-    const keys = cfg.ak.split(',').map(k => k.trim()).filter(Boolean);
-    if(keys.length === 0){ 
-      toast('❌ أدخل Gemini API Key في الإعدادات', true); 
-      return; 
-    }
-    
-    // اختيار مفتاح عشوائي
-    const randomKey = keys[Math.floor(Math.random() * keys.length)];
-    
-    // ===== Gemini API with Retry =====
+    // ===== Gemini API Call =====
     const geminiModel = 'gemini-2.0-flash';
-    let res;
-    let retries = 0;
-    const maxRetries = 2;
-    
-    while(retries <= maxRetries){
-      res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${randomKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              temperature: 0.85,
-              topP: 0.95,
-              maxOutputTokens: 8192
-            }
-          })
-        }
-      );
-      
-      if(res.status === 429 && retries < maxRetries){
-        retries++;
-        toast(`⏳ مشغول — جاري المحاولة ${retries}/${maxRetries}...`);
-        await new Promise(r => setTimeout(r, 30000)); // Wait 30 seconds
-        continue;
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${cfg.ak}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.85,
+            topP: 0.95,
+            maxOutputTokens: 8192
+          }
+        })
       }
-      break;
-    }
+    );
 
     if(!res.ok){
       const e = await res.json();
       const msg = e.error?.message || `HTTP ${res.status}`;
       if(res.status===400) throw new Error('API Key خاطئ — تحقق من المفتاح في الإعدادات');
-      if(res.status===429) throw new Error('Gemini مشغول — جرب بعد 5 دقائق');
+      if(res.status===429) throw new Error('تجاوزت الحد المجاني — انتظر دقيقة وحاول مرة أخرى');
       throw new Error(msg);
     }
 
