@@ -486,8 +486,12 @@ input[type=datetime-local]{color-scheme:dark;}
   <div class="psec">
     <div class="ph green">خيارات عامة</div>
     <div class="trow">
-      <div class="tlbl">🖼️ صور تلقائية (Unsplash)</div>
+      <div class="tlbl">🖼️ صور Unsplash عادية</div>
       <button class="toggler on" id="t-img" onclick="tog('t-img')"></button>
+    </div>
+    <div class="trow">
+      <div class="tlbl">🤖 صور AI تلقائية + لوجو</div>
+      <button class="toggler" id="t-aiimg" onclick="tog('t-aiimg')"></button>
     </div>
     <div class="trow">
       <div class="tlbl">🎯 SEO تلقائي</div>
@@ -500,6 +504,24 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="schedbox" id="schedbox">
       <div class="flabel" style="margin-bottom:6px;">📅 موعد النشر</div>
       <input type="datetime-local" id="sched-dt">
+    </div>
+  </div>
+
+  <!-- Logo Upload -->
+  <div class="psec" id="logo-section" style="display:none;">
+    <div class="ph amber">🏷️ لوجو الموقع</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:var(--mono);">
+      // يُضاف تلقائياً على صور AI — أعلى يمين
+    </div>
+    <div class="field">
+      <div class="flabel">ارفع اللوجو (PNG شفاف أفضل)</div>
+      <input type="file" id="logo-file" accept="image/*"
+        style="background:var(--surf3);border:1px dashed var(--amber);border-radius:8px;
+        padding:8px;color:var(--text2);font-size:11px;cursor:pointer;">
+    </div>
+    <div id="logo-preview" style="display:none;margin-top:8px;text-align:center;">
+      <img id="logo-img" style="max-height:50px;border-radius:6px;border:1px solid var(--line2);">
+      <div style="font-size:10px;color:var(--green);margin-top:4px;font-family:var(--mono);">✅ اللوجو جاهز</div>
     </div>
   </div>
 
@@ -894,7 +916,28 @@ window.onload = () => {
   loadCfg();
   renderHistory();
   buildKwGrid();
+  
+  // Logo upload handler
+  const logoFile = document.getElementById('logo-file');
+  if(logoFile){
+    logoFile.addEventListener('change', function(){
+      const file = this.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        logoDataUrl = e.target.result;
+        document.getElementById('logo-img').src = logoDataUrl;
+        document.getElementById('logo-preview').style.display = 'block';
+        toast('✅ تم رفع اللوجو');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 };
+
+// Global state for AI images
+let logoDataUrl = null;
+let aiImages = { first: null, middle: null };
 
 /* ============================
    KEYWORD GRID
@@ -954,7 +997,13 @@ function showSec(sec, btn) {
 /* ============================
    TOGGLES / MISC
 ============================= */
-function tog(id){ document.getElementById(id).classList.toggle('on'); }
+function tog(id){ 
+  document.getElementById(id).classList.toggle('on');
+  if(id === 't-aiimg'){
+    const isOn = document.getElementById('t-aiimg').classList.contains('on');
+    document.getElementById('logo-section').style.display = isOn ? 'block' : 'none';
+  }
+}
 function isOn(id){ return document.getElementById(id).classList.contains('on'); }
 function setLang(l,btn){ document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedLang=l; }
 function setTone(t,btn){ document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedTone=t; }
@@ -1074,9 +1123,17 @@ async function generate(){
 
     // SEO mode features
     document.getElementById('mf-seo').style.display = isOn('t-seo') ? 'inline-flex' : 'none';
-    document.getElementById('mf-img').style.display = isOn('t-img') ? 'inline-flex' : 'none';
+    document.getElementById('mf-img').style.display = (isOn('t-img')||isOn('t-aiimg')) ? 'inline-flex' : 'none';
 
-    if(isOn('t-img')){ document.getElementById('imgcard').classList.add('shown'); loadImages(topic); }
+    // Generate AI images if enabled
+    if(isOn('t-aiimg')){
+      await generateAIImagesAuto(topic);
+      renderArticle(artText);
+    } else if(isOn('t-img')){
+      document.getElementById('imgcard').classList.add('shown');
+      loadImages(topic);
+    }
+    
     toast(advMode ? '⚡ تم توليد مقال AdSense احترافي!' : '✅ تم توليد المقال!');
 
   } catch(err) {
@@ -1228,6 +1285,65 @@ function showLoader(isAdv){
     </div>`;
 }
 
+/* ============================
+   AI IMAGE GENERATION
+============================= */
+async function generateAIImagesAuto(topic){
+  if(!logoDataUrl){
+    toast('⚠️ ارفع لوجو من الشريط الجانبي أولاً', true);
+    return;
+  }
+
+  toast('🎨 جاري توليد صورتين AI + إضافة اللوجو...');
+  
+  const seed1 = Math.floor(Math.random()*99999);
+  const seed2 = Math.floor(Math.random()*99999);
+  const p1 = encodeURIComponent(`${topic}, professional blog header, modern design, vibrant`);
+  const p2 = encodeURIComponent(`${topic}, digital illustration, editorial style, quality`);
+  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${seed1}&nologo=true`;
+  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${seed2}&nologo=true`;
+
+  try {
+    aiImages.first = await processImageWithLogo(url1);
+    aiImages.middle = await processImageWithLogo(url2);
+    toast('✅ تم توليد الصورتين + اللوجو');
+  } catch(e){
+    toast('❌ فشل توليد الصور', true);
+    console.error(e);
+  }
+}
+
+async function processImageWithLogo(imgURL){
+  return new Promise((resolve, reject)=>{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const mainImg = new Image();
+    mainImg.crossOrigin = 'anonymous';
+    mainImg.onload = ()=>{
+      canvas.width = 1200;
+      canvas.height = 630;
+      ctx.drawImage(mainImg, 0, 0, 1200, 630);
+      
+      const logoImg = new Image();
+      logoImg.onload = ()=>{
+        const logoW = 1200 * 0.20;
+        const logoH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoW;
+        const x = 1200 - logoW - 30;
+        const y = 30;
+        ctx.globalAlpha = 0.88;
+        ctx.drawImage(logoImg, x, y, logoW, logoH);
+        ctx.globalAlpha = 1;
+        resolve(canvas.toDataURL('image/webp', 0.92));
+      };
+      logoImg.onerror = ()=> reject('Logo load failed');
+      logoImg.src = logoDataUrl;
+    };
+    mainImg.onerror = ()=> reject('Image load failed');
+    mainImg.src = imgURL;
+  });
+}
+
 function renderArticle(text){
   const av = document.getElementById('artview');
   if(viewMode==='raw'){
@@ -1239,14 +1355,34 @@ function renderArticle(text){
     av.innerHTML = `<div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">${stripped}</div>`;
     return;
   }
+  
   // Preview — render HTML
-  // If article is already HTML (advanced mode), render directly
   if(text.trim().startsWith('<')){
-    // Inject selected image after h1 if chosen
     let rendered = text;
-    if(selectedImg){
-      rendered = rendered.replace(/<\/h1>/, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
+    
+    // Inject AI images if generated
+    if(aiImages.first && aiImages.middle){
+      rendered = rendered.replace(
+        /<\/h1>/i,
+        `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
+      );
+      
+      const h2Matches = rendered.match(/<\/h2>/gi);
+      if(h2Matches && h2Matches.length >= 2){
+        let count = 0;
+        rendered = rendered.replace(/<\/h2>/gi, (match)=>{
+          count++;
+          if(count === 2){
+            return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
+          }
+          return match;
+        });
+      }
+    } 
+    else if(selectedImg && !aiImages.first){
+      rendered = rendered.replace(/<\/h1>/i, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
     }
+    
     av.innerHTML = rendered;
   } else {
     // Convert markdown-like
@@ -1366,8 +1502,8 @@ async function doPublish(cfg, isScheduled=false){
 
 function buildFinalHTML(){
   if(!currentArticle) return '';
-  // If already HTML, use as-is
   let content = currentArticle;
+  
   if(!content.trim().startsWith('<')){
     content = content
       .replace(/^# (.+)$/gm,'<h1>$1</h1>')
@@ -1379,7 +1515,30 @@ function buildFinalHTML(){
       .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
       .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
   }
-  if(selectedImg) content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  
+  // Inject AI images
+  if(aiImages.first && aiImages.middle){
+    content = content.replace(
+      /<\/h1>/i,
+      `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
+    );
+    
+    const h2Matches = content.match(/<\/h2>/gi);
+    if(h2Matches && h2Matches.length >= 2){
+      let count = 0;
+      content = content.replace(/<\/h2>/gi, (match)=>{
+        count++;
+        if(count === 2){
+          return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
+        }
+        return match;
+      });
+    }
+  } 
+  else if(selectedImg && !aiImages.first){
+    content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  }
+  
   const style = `<style>body,div,p,h1,h2,h3,li{font-family:'Tajawal',Arial,sans-serif;line-height:1.9;}
 p{margin-bottom:15px;font-size:16px;color:#222;}
 h1{color:#1565c0;font-size:28px;margin-bottom:18px;}
