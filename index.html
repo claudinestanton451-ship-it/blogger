@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BlogMind AI v5 — ناشر بلوجر | Together AI مجاني</title>
+<title>BlogMind AI v5 — ناشر بلوجر | Groq مجاني وسريع</title>
 <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -346,7 +346,7 @@ input[type=datetime-local]{color-scheme:dark;}
   </div>
   <div class="ai-badge">
     <div class="pdot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></div>
-    <span style="color:#10b981;">Together AI ✦ مجاني</span>
+    <span style="color:#10b981;">Groq ✦ مجاني</span>
   </div>
 </nav>
 
@@ -486,8 +486,12 @@ input[type=datetime-local]{color-scheme:dark;}
   <div class="psec">
     <div class="ph green">خيارات عامة</div>
     <div class="trow">
-      <div class="tlbl">🖼️ صور تلقائية (Unsplash)</div>
+      <div class="tlbl">🖼️ صور Unsplash عادية</div>
       <button class="toggler on" id="t-img" onclick="tog('t-img')"></button>
+    </div>
+    <div class="trow">
+      <div class="tlbl">🤖 صور AI تلقائية + لوجو</div>
+      <button class="toggler" id="t-aiimg" onclick="tog('t-aiimg')"></button>
     </div>
     <div class="trow">
       <div class="tlbl">🎯 SEO تلقائي</div>
@@ -500,6 +504,24 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="schedbox" id="schedbox">
       <div class="flabel" style="margin-bottom:6px;">📅 موعد النشر</div>
       <input type="datetime-local" id="sched-dt">
+    </div>
+  </div>
+
+  <!-- Logo Upload -->
+  <div class="psec" id="logo-section" style="display:none;">
+    <div class="ph amber">🏷️ لوجو الموقع</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:var(--mono);">
+      // يُضاف تلقائياً على صور AI — أعلى يمين
+    </div>
+    <div class="field">
+      <div class="flabel">ارفع اللوجو (PNG شفاف أفضل)</div>
+      <input type="file" id="logo-file" accept="image/*"
+        style="background:var(--surf3);border:1px dashed var(--amber);border-radius:8px;
+        padding:8px;color:var(--text2);font-size:11px;cursor:pointer;">
+    </div>
+    <div id="logo-preview" style="display:none;margin-top:8px;text-align:center;">
+      <img id="logo-img" style="max-height:50px;border-radius:6px;border:1px solid var(--line2);">
+      <div style="font-size:10px;color:var(--green);margin-top:4px;font-family:var(--mono);">✅ اللوجو جاهز</div>
     </div>
   </div>
 
@@ -527,7 +549,7 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="genzone">
       <div class="wsh">التوليد</div>
       <button class="genbtn" id="genbtn" onclick="generate()">
-        <span>✦</span><span id="gen-lbl">توليد مقال — Together AI مجاني</span>
+        <span>✦</span><span id="gen-lbl">توليد مقال — Groq مجاني</span>
       </button>
       <div class="statsrow" id="statsrow" style="display:none;">
         <div class="sbadge">📝 <b id="sw">0</b> كلمة</div>
@@ -554,7 +576,7 @@ input[type=datetime-local]{color-scheme:dark;}
         <div class="estate">
           <div class="eicon">✍️</div>
           <p>أدخل الموضوع واضغط "توليد"</p>
-          <small style="font-family:var(--mono);">// يعمل مع Together AI مجاناً — 1500 مقال/يوم</small>
+          <small style="font-family:var(--mono);">// يعمل مع Groq مجاناً — 1500 مقال/يوم</small>
         </div>
       </div>
     </div>
@@ -607,16 +629,15 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="wsh">الإعدادات</div>
 
     <div class="setcard">
-      <div class="sethead"><div class="setdot" style="background:#10b981;"></div>Google Together AI API — 🆓 مجاني</div>
+      <div class="sethead"><div class="setdot" style="background:#10b981;"></div>Groq API — 🆓 مجاني</div>
       <div class="setbody">
         <div class="field">
-          <div class="flabel">🔑 Together AI API Key (أو أكتر من مفتاح)</div>
-          <div class="isec"><input type="password" id="cfg-ak" placeholder="AIzaSy..., AIzaBc..., AIzaDe..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
-          <div style="margin-top:8px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.9;">
+          <div class="flabel">🔑 Groq API Key</div>
+          <div class="isec"><input type="password" id="cfg-ak" placeholder="AIzaSy..."><button class="eye" onclick="toggleEye('cfg-ak',this)">👁</button></div>
+          <div style="margin-top:8px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:#7ea8d0;font-family:var(--mono);line-height:1.8;">
             ✅ مجاني 100% — لا يحتاج كريدت كارد<br>
             ✅ 1500 طلب يومياً مجاناً<br>
-            💡 <b>نصيحة:</b> اعمل 3-4 مفاتيح من Gmail مختلفة وحطهم مفصولين بفاصلة — الأداة هتبدل بينهم تلقائياً<br>
-            // احصل عليه من: <a href="https://api.together.xyz/settings/api-keys" target="_blank" style="color:#10b981;">aistudio.google.com ↗</a>
+            // احصل عليه من: <a href="https://console.groq.com" target="_blank" style="color:#10b981;">aistudio.google.com ↗</a>
           </div>
         </div>
       </div>
@@ -643,7 +664,7 @@ input[type=datetime-local]{color-scheme:dark;}
 
     <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
       <button class="btnpub" onclick="saveCfg()">💾 حفظ الإعدادات</button>
-      <button class="btng" id="verify-btn" onclick="verifyAllKeys()" style="border-color:var(--amber);color:var(--amber);">
+      <button class="btng" id="verify-btn" onclick="verifyAll()" style="border-color:var(--amber);color:var(--amber);">
         🔍 التحقق من المفاتيح
       </button>
     </div>
@@ -659,7 +680,7 @@ input[type=datetime-local]{color-scheme:dark;}
         <div class="vrow" id="v-api">
           <div class="vicon" id="vi-api">⏳</div>
           <div class="vinfo">
-            <div class="vtitle">Together AI API Key</div>
+            <div class="vtitle">Groq API Key</div>
             <div class="vdetail" id="vd-api">جاري التحقق...</div>
           </div>
           <div class="vstatus" id="vs-api">—</div>
@@ -709,14 +730,14 @@ input[type=datetime-local]{color-scheme:dark;}
     <div class="setcard" style="border-color:rgba(66,133,244,.3);">
       <div class="sethead" style="background:rgba(66,133,244,.08);">
         <div class="setdot" style="background:#10b981;"></div>
-        🔑 Together AI API Key — مجاني 100%
+        🔑 Groq API Key — مجاني 100%
         <span style="margin-right:auto;background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3);padding:2px 8px;border-radius:10px;font-size:9px;">✅ بدون كريدت كارد</span>
       </div>
       <div class="setbody">
         <div style="display:flex;flex-direction:column;gap:10px;">
           <div class="guide-step">
             <div class="gs-num">1</div>
-            <div class="gs-txt">روح على الرابط: <a href="https://api.together.xyz/settings/api-keys" target="_blank" style="color:#10b981;font-weight:600;">api.together.xyz/settings/api-keys ↗</a></div>
+            <div class="gs-txt">روح على الرابط: <a href="https://console.groq.com" target="_blank" style="color:#10b981;font-weight:600;">console.groq.com ↗</a></div>
           </div>
           <div class="guide-step">
             <div class="gs-num">2</div>
@@ -732,7 +753,7 @@ input[type=datetime-local]{color-scheme:dark;}
           </div>
           <div class="guide-step">
             <div class="gs-num">5</div>
-            <div class="gs-txt">انسخ المفتاح وارجع لتبويب <b>الإعدادات</b> وحطه في خانة Together AI API Key</div>
+            <div class="gs-txt">انسخ المفتاح وارجع لتبويب <b>الإعدادات</b> وحطه في خانة Groq API Key</div>
           </div>
           <div style="background:rgba(66,133,244,.07);border:1px solid rgba(66,133,244,.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text2);font-family:var(--mono);">
             المفتاح بيبدأ بـ: <span style="color:#10b981;">AIzaSy...</span><br>
@@ -829,7 +850,7 @@ input[type=datetime-local]{color-scheme:dark;}
             <td style="padding:8px;color:var(--text2);font-family:var(--mono);">مدة الصلاحية</td>
           </tr>
           <tr style="border-bottom:1px solid var(--line);">
-            <td style="padding:8px;color:#10b981;">Together AI Key</td>
+            <td style="padding:8px;color:#10b981;">Groq Key</td>
             <td style="padding:8px;color:var(--text);">aistudio.google.com</td>
             <td style="padding:8px;color:var(--green);">دائم ✅</td>
           </tr>
@@ -895,7 +916,28 @@ window.onload = () => {
   loadCfg();
   renderHistory();
   buildKwGrid();
+  
+  // Logo upload handler
+  const logoFile = document.getElementById('logo-file');
+  if(logoFile){
+    logoFile.addEventListener('change', function(){
+      const file = this.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        logoDataUrl = e.target.result;
+        document.getElementById('logo-img').src = logoDataUrl;
+        document.getElementById('logo-preview').style.display = 'block';
+        toast('✅ تم رفع اللوجو');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 };
+
+// Global state for AI images
+let logoDataUrl = null;
+let aiImages = { first: null, middle: null };
 
 /* ============================
    KEYWORD GRID
@@ -955,7 +997,13 @@ function showSec(sec, btn) {
 /* ============================
    TOGGLES / MISC
 ============================= */
-function tog(id){ document.getElementById(id).classList.toggle('on'); }
+function tog(id){ 
+  document.getElementById(id).classList.toggle('on');
+  if(id === 't-aiimg'){
+    const isOn = document.getElementById('t-aiimg').classList.contains('on');
+    document.getElementById('logo-section').style.display = isOn ? 'block' : 'none';
+  }
+}
 function isOn(id){ return document.getElementById(id).classList.contains('on'); }
 function setLang(l,btn){ document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedLang=l; }
 function setTone(t,btn){ document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); selectedTone=t; }
@@ -996,7 +1044,7 @@ function getCfg(){ return JSON.parse(localStorage.getItem('bm_cfg')||'{}'); }
 async function generate(){
   const cfg = getCfg();
   const topic = document.getElementById('topic').value.trim();
-  if(!cfg.ak){ toast('❌ أدخل Together AI API Key في الإعدادات', true); return; }
+  if(!cfg.ak){ toast('❌ أدخل Groq API Key في الإعدادات', true); return; }
   if(!topic){ toast('❌ أدخل موضوع المقال', true); return; }
 
   const btn = document.getElementById('genbtn');
@@ -1011,38 +1059,23 @@ async function generate(){
 
   showLoader(advMode);
 
-  // تأخير عشوائي لمحاكاة سلوك بشري (2-5 ثواني)
-  const delay = 2000 + Math.random() * 3000;
-  await new Promise(r => setTimeout(r, delay));
-
   const prompt = advMode ? buildAdvancedPrompt(topic) : buildStandardPrompt(topic);
 
   try {
-    // ===== Multi-Key Rotation =====
-    // إضافة مفاتيح متعددة مفصولة بفاصلة في الإعدادات
-    const keys = cfg.ak.split(',').map(k => k.trim()).filter(Boolean);
-    if(keys.length === 0){ 
-      toast('❌ أدخل Together AI API Key في الإعدادات', true); 
-      return; 
-    }
-    
-    // استخدام أول مفتاح (Together AI مش محتاج rotation)
-    const apiKey = keys[0];
-    
-    // ===== Together AI API =====
+    // ===== Groq API Call =====
     const res = await fetch(
-      'https://api.together.xyz/v1/chat/completions',
+      'https://api.groq.com/openai/v1/chat/completions',
       {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${cfg.ak}`
         },
         body: JSON.stringify({
-          model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+          model: 'llama-3.3-70b-versatile',
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 4096,
-          temperature: 0.85
+          temperature: 0.85,
+          max_tokens: 8000
         })
       }
     );
@@ -1051,7 +1084,7 @@ async function generate(){
       const e = await res.json().catch(()=>({}));
       const msg = e.error?.message || `HTTP ${res.status}`;
       if(res.status===401) throw new Error('API Key خاطئ — تحقق من المفتاح في الإعدادات');
-      if(res.status===402) throw new Error('رصيدك خلص — ادخل على api.together.xyz');
+      if(res.status===429) throw new Error('تجاوزت الحد — انتظر دقيقة');
       throw new Error(msg);
     }
 
@@ -1061,7 +1094,7 @@ async function generate(){
     }
     let raw = data.choices[0].message.content;
 
-    // Clean markdown code blocks if Together AI wraps in them
+    // Clean markdown code blocks
     raw = raw.replace(/^```html\n?/i,'').replace(/^```\n?/,'').replace(/\n?```$/,'').trim();
 
     let artText = raw;
@@ -1090,9 +1123,17 @@ async function generate(){
 
     // SEO mode features
     document.getElementById('mf-seo').style.display = isOn('t-seo') ? 'inline-flex' : 'none';
-    document.getElementById('mf-img').style.display = isOn('t-img') ? 'inline-flex' : 'none';
+    document.getElementById('mf-img').style.display = (isOn('t-img')||isOn('t-aiimg')) ? 'inline-flex' : 'none';
 
-    if(isOn('t-img')){ document.getElementById('imgcard').classList.add('shown'); loadImages(topic); }
+    // Generate AI images if enabled
+    if(isOn('t-aiimg')){
+      await generateAIImagesAuto(topic);
+      renderArticle(artText);
+    } else if(isOn('t-img')){
+      document.getElementById('imgcard').classList.add('shown');
+      loadImages(topic);
+    }
+    
     toast(advMode ? '⚡ تم توليد مقال AdSense احترافي!' : '✅ تم توليد المقال!');
 
   } catch(err) {
@@ -1103,7 +1144,7 @@ async function generate(){
     toast('❌ '+err.message, true);
   } finally {
     btn.disabled=false;
-    lbl.textContent = advMode ? 'توليد مقال AdSense متقدم' : 'توليد مقال — Together AI مجاني';
+    lbl.textContent = advMode ? 'توليد مقال AdSense متقدم' : 'توليد مقال — Groq مجاني';
   }
 }
 
@@ -1114,12 +1155,117 @@ function buildStandardPrompt(topic){
   const wc = lenWords[document.getElementById('len-sl').value];
   const langStr = {ar:'العربية', en:'English', bi:'عربية مع مصطلحات إنجليزية'}[selectedLang];
   const seoReq = isOn('t-seo') ? `\n\nبعد المقال أضف:\n===SEO===\n{"title":"عنوان SEO 60 حرف","description":"وصف 155 حرف","score":85}\n===END===` : '';
-  return `أنت كاتب محتوى رقمي محترف. اكتب مقالاً باللغة ${langStr} بأسلوب ${selectedTone}.
-الموضوع: ${topic}
-الطول: ~${wc} كلمة
-التصنيف: ${document.getElementById('cat').value || 'عام'}
+  
+  return `اكتب مقالًا عربيًا بأسلوب إنساني طبيعي 100% وكأن الكاتب شخص حقيقي بيفكر وبيحكي،
+بلغة بسيطة وسلسة ومباشرة، بدون أسلوب أكاديمي أو مبالغة،
+ويركّز على إفادة القارئ أولًا قبل أي اعتبار آخر.
 
-اكتب بأسلوب طبيعي واحترافي مع عناوين فرعية H2 وH3 منظمة. ابدأ مباشرة بالعنوان H1.${seoReq}`;
+🔒 شروط Google AdSense:
+- المحتوى آمن، مفيد، وغير مضلل
+- لا تستخدم عناوين خادعة أو Clickbait
+- لا تقدّم وعود غير حقيقية
+- لا تحث القارئ على الضغط على الإعلانات
+- لا تذكر Google AdSense أو الإعلانات داخل المقال
+
+✍️ أسلوب الكتابة:
+- جُمل متفاوتة الطول
+- فقرات قصيرة (3–4 أسطر كحد أقصى)
+- أسلوب بشري طبيعي
+- رأي وتجربة عند الحاجة
+- بدون حشو أو تكرار
+- مسموح بأخطاء لغوية بسيطة غير مؤثرة
+- اجعل نبرة الكتابة غير منتظمة قليلًا بين الفقرات وكأن الكاتب بشر حقيقي
+- استخدم تعبيرات طبيعية غير متوقعة أحيانًا بدون مبالغة
+
+📱 التطبيقات والألعاب:
+- اكتب اسم التطبيق أو اللعبة باللغة الإنجليزية رسميًا
+- اذكر الاسم داخل العناوين والفقرات بشكل طبيعي
+- اعرض المميزات والعيوب بصدق وحيادية
+
+📝 التنسيق:
+- العنوان الرئيسي H1 (لا يزيد عن 65 حرفًا)
+- العناوين الفرعية H2 باللون الأحمر
+- العناوين الثانوية H3 باللون الأزرق الغامق
+
+استخدم HTML:
+<h1>العنوان</h1>
+<h2 style="color:red;">عنوان فرعي</h2>
+<h3 style="color:darkblue;">عنوان ثانوي</h3>
+
+🧾 بنية المقال:
+- مقدمة قصيرة تجيب عن نية البحث
+- محتوى منظم بعناوين واضحة
+- فقرات سهلة القراءة
+- وسّع كل عنوان فرعي بشرح متعمّق وأمثلة عملية
+- لا تقل أي فقرة عن 80 كلمة
+
+🧩 أقسام أساسية وإضافية داخل المقال:
+
+- أضف عنوانًا فرعيًا أساسيًا (H2) لشرح طريقة الاستخدام بعنوان:
+  "طريقة استخدام [اسم التطبيق أو اللعبة]"
+  • هذا القسم إلزامي في كل مقال
+  • الشرح يكون مبسّط ومناسب للمبتدئين
+  • خطوات واضحة ومنطقية
+
+- أضف عنوانًا فرعيًا أساسيًا (H2) للمقارنة بعنوان:
+  "مقارنة [اسم التطبيق أو اللعبة] مع تطبيقات/ألعاب أخرى من نفس المجال"
+  • هذا القسم إلزامي في كل مقال
+  • المقارنة تكون حيادية وموضوعية
+  • بدون مبالغة أو تحقير للمنافسين
+
+- أضف عنوانًا فرعيًا اختياريًا (H2) لحل المشاكل بعنوان:
+  "حل مشاكل [اسم التطبيق أو اللعبة] الشائعة"
+  • أضف هذا القسم فقط إذا وُجدت حلول حقيقية
+  • لا تُنشئ القسم إذا لم توجد حلول فعلية
+  • لا تخترع مشاكل أو حلول غير مؤكدة
+
+⬇️ خانة التحميل (مهمة – متوافقة مع Blogger):
+
+- أضف قسم تحميل بعنوان H2 مشوّق غير مضلل
+
+- بعد العنوان:
+  • أضف سطرًا قصيرًا يوضّح أن التحميل من مصدر رسمي وآمن
+
+- أضف زر تحميل احترافي:
+  • في منتصف الصفحة
+  • HTML بسيط فقط
+  • inline style فقط
+  • بدون CSS خارجي أو JavaScript أو SVG
+  • يحتوي على أيقونة تحميل نصية
+  • حواف دائرية + ظل خفيف
+  • قابل للتعديل من محرر Blogger
+  • لا يتكرر أكثر من مرتين
+
+🎨 شكل زر التحميل المطلوب:
+
+<div style="text-align:center; margin:25px 0;">
+  <a href="#"
+     style="
+     display:inline-block;
+     padding:16px 34px;
+     background:linear-gradient(135deg,#1e88e5,#42a5f5);
+     color:#ffffff;
+     font-size:18px;
+     font-weight:600;
+     border-radius:12px;
+     text-decoration:none;
+     box-shadow:0 6px 18px rgba(30,136,229,0.35);
+     ">
+     ⬇️ تحميل [اسم التطبيق]
+  </a>
+</div>
+
+🧠 الخاتمة:
+- اكتب خاتمة بنصيحة واضحة ومحايدة
+- تساعد القارئ على اتخاذ قرار مناسب له
+
+📄 بيانات المقال:
+- الموضوع: ${topic}
+- عدد الكلمات: لا يقل عن ${wc} كلمة
+- الفئة المستهدفة: ${document.getElementById('cat').value || 'عام'}
+- اللغة: ${langStr}
+
+ابدأ مباشرة بعنوان H1 ثم المحتوى.${seoReq}`;
 }
 
 function buildAdvancedPrompt(topic){
@@ -1233,7 +1379,7 @@ function showLoader(isAdv){
   document.getElementById('artview').innerHTML = `
     <div class="loader">
       <div class="lring ${color}"></div>
-      <div class="lmsg">${isAdv ? '⚡ توليد مقال AdSense احترافي...' : '// Together AI يكتب مقالك مجاناً...'}</div>
+      <div class="lmsg">${isAdv ? '⚡ توليد مقال AdSense احترافي...' : '// Groq يكتب مقالك مجاناً...'}</div>
       <div class="lprog">
         <div class="lpstep done"><div class="dot"></div><span style="color:var(--text3);">تحليل الموضوع</span></div>
         <div class="lpstep active"><div class="dot"></div><span style="color:var(--text2);">${isAdv ? 'توزيع الكلمات المفتاحية' : 'كتابة المحتوى'}</span></div>
@@ -1242,6 +1388,65 @@ function showLoader(isAdv){
       </div>
       <div class="lsub">// قد يستغرق حتى 30 ثانية للمقال المتقدم</div>
     </div>`;
+}
+
+/* ============================
+   AI IMAGE GENERATION
+============================= */
+async function generateAIImagesAuto(topic){
+  if(!logoDataUrl){
+    toast('⚠️ ارفع لوجو من الشريط الجانبي أولاً', true);
+    return;
+  }
+
+  toast('🎨 جاري توليد صورتين AI + إضافة اللوجو...');
+  
+  const seed1 = Math.floor(Math.random()*99999);
+  const seed2 = Math.floor(Math.random()*99999);
+  const p1 = encodeURIComponent(`${topic}, professional blog header, modern design, vibrant`);
+  const p2 = encodeURIComponent(`${topic}, digital illustration, editorial style, quality`);
+  const url1 = `https://image.pollinations.ai/prompt/${p1}?width=1200&height=630&seed=${seed1}&nologo=true`;
+  const url2 = `https://image.pollinations.ai/prompt/${p2}?width=1200&height=630&seed=${seed2}&nologo=true`;
+
+  try {
+    aiImages.first = await processImageWithLogo(url1);
+    aiImages.middle = await processImageWithLogo(url2);
+    toast('✅ تم توليد الصورتين + اللوجو');
+  } catch(e){
+    toast('❌ فشل توليد الصور', true);
+    console.error(e);
+  }
+}
+
+async function processImageWithLogo(imgURL){
+  return new Promise((resolve, reject)=>{
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const mainImg = new Image();
+    mainImg.crossOrigin = 'anonymous';
+    mainImg.onload = ()=>{
+      canvas.width = 1200;
+      canvas.height = 630;
+      ctx.drawImage(mainImg, 0, 0, 1200, 630);
+      
+      const logoImg = new Image();
+      logoImg.onload = ()=>{
+        const logoW = 1200 * 0.20;
+        const logoH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoW;
+        const x = 1200 - logoW - 30;
+        const y = 30;
+        ctx.globalAlpha = 0.88;
+        ctx.drawImage(logoImg, x, y, logoW, logoH);
+        ctx.globalAlpha = 1;
+        resolve(canvas.toDataURL('image/webp', 0.92));
+      };
+      logoImg.onerror = ()=> reject('Logo load failed');
+      logoImg.src = logoDataUrl;
+    };
+    mainImg.onerror = ()=> reject('Image load failed');
+    mainImg.src = imgURL;
+  });
 }
 
 function renderArticle(text){
@@ -1255,14 +1460,34 @@ function renderArticle(text){
     av.innerHTML = `<div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;">${stripped}</div>`;
     return;
   }
+  
   // Preview — render HTML
-  // If article is already HTML (advanced mode), render directly
   if(text.trim().startsWith('<')){
-    // Inject selected image after h1 if chosen
     let rendered = text;
-    if(selectedImg){
-      rendered = rendered.replace(/<\/h1>/, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
+    
+    // Inject AI images if generated
+    if(aiImages.first && aiImages.middle){
+      rendered = rendered.replace(
+        /<\/h1>/i,
+        `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
+      );
+      
+      const h2Matches = rendered.match(/<\/h2>/gi);
+      if(h2Matches && h2Matches.length >= 2){
+        let count = 0;
+        rendered = rendered.replace(/<\/h2>/gi, (match)=>{
+          count++;
+          if(count === 2){
+            return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
+          }
+          return match;
+        });
+      }
+    } 
+    else if(selectedImg && !aiImages.first){
+      rendered = rendered.replace(/<\/h1>/i, `</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:10px;margin:14px 0;max-height:220px;object-fit:cover;">`);
     }
+    
     av.innerHTML = rendered;
   } else {
     // Convert markdown-like
@@ -1382,8 +1607,8 @@ async function doPublish(cfg, isScheduled=false){
 
 function buildFinalHTML(){
   if(!currentArticle) return '';
-  // If already HTML, use as-is
   let content = currentArticle;
+  
   if(!content.trim().startsWith('<')){
     content = content
       .replace(/^# (.+)$/gm,'<h1>$1</h1>')
@@ -1395,7 +1620,30 @@ function buildFinalHTML(){
       .replace(/(<li>.*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`)
       .replace(/^(?!<[hHuUlLoObBpP]).+$/gm,m=>m.trim()?`<p>${m}</p>`:'');
   }
-  if(selectedImg) content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  
+  // Inject AI images
+  if(aiImages.first && aiImages.middle){
+    content = content.replace(
+      /<\/h1>/i,
+      `</h1><img src="${aiImages.first}" alt="صورة العنوان" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`
+    );
+    
+    const h2Matches = content.match(/<\/h2>/gi);
+    if(h2Matches && h2Matches.length >= 2){
+      let count = 0;
+      content = content.replace(/<\/h2>/gi, (match)=>{
+        count++;
+        if(count === 2){
+          return `</h2><img src="${aiImages.middle}" alt="صورة المحتوى" style="width:100%;border-radius:12px;margin:16px 0;" loading="lazy">`;
+        }
+        return match;
+      });
+    }
+  } 
+  else if(selectedImg && !aiImages.first){
+    content = content.replace('</h1>',`</h1><img src="${selectedImg}" alt="صورة المقال" style="width:100%;border-radius:12px;margin:16px 0;max-height:380px;object-fit:cover;">`);
+  }
+  
   const style = `<style>body,div,p,h1,h2,h3,li{font-family:'Tajawal',Arial,sans-serif;line-height:1.9;}
 p{margin-bottom:15px;font-size:16px;color:#222;}
 h1{color:#1565c0;font-size:28px;margin-bottom:18px;}
@@ -1482,7 +1730,7 @@ document.getElementById('modal').addEventListener('click',e=>{ if(e.target===e.c
 /* ============================
    VERIFY ALL KEYS
 ============================= */
-async function verifyAllKeys(){
+async function verifyAll(){
   const cfg = getCfg();
   const btn = document.getElementById('verify-btn');
   btn.disabled = true;
@@ -1492,39 +1740,29 @@ async function verifyAllKeys(){
   card.style.display = 'block';
   card.scrollIntoView({behavior:'smooth', block:'nearest'});
 
-  ['api','bid','tok'].forEach(k => setVRow(k,'checking','⏳','جاري التحقق...','...'));
+  ['api','bid','tok'].forEach(k => setVRow(k,'checking','⏳','جاري التحقق الفعلي...','...'));
   document.getElementById('verify-summary').style.display = 'none';
   document.getElementById('verify-overall').textContent = '';
 
   let okApi=false, okBid=false, okTok=false;
 
-  // ══════ 1) Together AI API ══════
+  // ══════ 1) Groq API ══════
   if(!cfg.ak || cfg.ak.trim()===''){
-    setVRow('api','fail','❌','الخانة فارغة — أدخل Together AI API Key','فارغ ❌');
+    setVRow('api','fail','❌','الخانة فارغة — أدخل Groq API Key','فارغ ❌');
   } else {
     try {
       const r = await fetch(
-        'https://api.together.xyz/v1/chat/completions',
+        'https://api.groq.com/openai/v1/models',
         {
-          method:'POST',
-          headers:{
-            'Authorization': `Bearer ${cfg.ak.trim()}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
-            messages: [{role: 'user', content: 'hi'}],
-            max_tokens: 10
-          })
+          method:'GET',
+          headers:{'Authorization':`Bearer ${cfg.ak.trim()}`}
         }
       );
       if(r.ok){
-        setVRow('api','ok','✅','المفتاح صحيح ✅ — Llama 3.3 70B','شغّال ✅');
+        setVRow('api','ok','✅','المفتاح صحيح ✅ — Groq Llama 3.3 70B','شغّال ✅');
         okApi = true;
-      } else if(r.status===401){
-        setVRow('api','fail','❌','المفتاح خاطئ — اجيب جديد من api.together.xyz','خاطئ ❌');
-      } else if(r.status===402){
-        setVRow('api','fail','💰','رصيدك خلص — ادخل على api.together.xyz','رصيد خلص ❌');
+      } else if(r.status===401 || r.status===403){
+        setVRow('api','fail','❌','المفتاح خاطئ أو منتهي — اجيب جديد من console.groq.com','خاطئ ❌');
       } else {
         setVRow('api','fail','⚠️','خطأ: HTTP '+r.status,'خطأ ⚠️');
       }
@@ -1563,19 +1801,19 @@ async function verifyAllKeys(){
         const d = await r.json();
         const blogName = d.name || 'غير معروف';
         setVRow('bid','ok','✅',`Blog ID صحيح — المدونة: "${blogName}"`,'صحيح ✅');
-        setVRow('tok','ok','✅','التوكن شغّال ✅','شغّال ✅');
+        setVRow('tok','ok','✅','التوكن شغّال ✅ — تم التحقق','شغّال ✅');
         okBid=true; okTok=true;
       } else if(r.status===401){
         setVRow('bid','ok','✅','Blog ID يبدو صح','يبدو صح ⚠️');
-        setVRow('tok','fail','❌','التوكن منتهي — اجيب جديد','منتهي ❌');
+        setVRow('tok','fail','❌','التوكن منتهي (401) — اجيب جديد','منتهي ❌');
         okBid=false; okTok=false;
       } else if(r.status===403){
         setVRow('bid','ok','✅','Blog ID يبدو صح','✅');
         setVRow('tok','fail','❌','التوكن بدون صلاحية Blogger','بدون صلاحية ❌');
         okBid=true; okTok=false;
       } else if(r.status===404){
-        setVRow('bid','fail','❌','Blog ID مش موجود','غير موجود ❌');
-        setVRow('tok','checking','⚠️','مش قادر نتحقق','⚠️');
+        setVRow('bid','fail','❌','Blog ID مش موجود (404)','غير موجود ❌');
+        setVRow('tok','checking','⚠️','مش قادر نتحقق — Blog ID غلط','⚠️');
         okBid=false; okTok=false;
       } else {
         setVRow('bid','fail','⚠️','خطأ HTTP '+r.status,'خطأ ⚠️');
@@ -1583,8 +1821,8 @@ async function verifyAllKeys(){
         okBid=false; okTok=false;
       }
     } catch(e){
-      setVRow('bid','fail','❌','فشل الاتصال','فشل ❌');
-      setVRow('tok','fail','❌','فشل الاتصال','فشل ❌');
+      setVRow('bid','fail','❌','فشل الاتصال بـ Blogger','فشل ❌');
+      setVRow('tok','fail','❌','فشل الاتصال بـ Blogger','فشل ❌');
       okBid=false; okTok=false;
     }
   }
@@ -1602,9 +1840,9 @@ async function verifyAllKeys(){
 
   const sumEl = document.getElementById('verify-summary');
   let lines = [];
-  if(!okApi) lines.push('🔑 اجيب Together AI API Key من: <b>api.together.xyz/settings/api-keys</b>');
-  if(!okBid) lines.push('📰 تحقق من Blog ID');
-  if(!okTok) lines.push('🔐 اجيب Access Token من OAuth Playground');
+  if(!okApi) lines.push('🔑 اجيب Groq API Key من: <b>console.groq.com</b>');
+  if(!okBid) lines.push('📰 تحقق من Blog ID — الأرقام من رابط بلوجر');
+  if(!okTok) lines.push('🔐 اجيب Access Token جديد من: <b>developers.google.com/oauthplayground</b>');
   if(allOk) lines.push('🎉 كل حاجة تمام! ابدأ التوليد');
 
   sumEl.innerHTML = lines.join('<br>');
