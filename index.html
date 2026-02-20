@@ -1064,7 +1064,7 @@ async function generate(){
   try {
     // ===== Hugging Face API Call =====
     const res = await fetch(
-      'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-70B-Instruct',
+      'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
       {
         method: 'POST',
         headers: { 
@@ -1755,7 +1755,7 @@ async function verifyAll(){
   } else {
     try {
       const r = await fetch(
-        'https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-70B-Instruct',
+        'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
         {
           method:'POST',
           headers:{
@@ -1769,7 +1769,7 @@ async function verifyAll(){
         }
       );
       if(r.ok){
-        setVRow('api','ok','✅','المفتاح صحيح ✅ — Hugging Face Llama 3.1','شغّال ✅');
+        setVRow('api','ok','✅','المفتاح صحيح ✅ — Hugging Face Mixtral 8x7B','شغّال ✅');
         okApi = true;
       } else if(r.status===401 || r.status===403){
         setVRow('api','fail','❌','المفتاح خاطئ — اجيب جديد من huggingface.co/settings/tokens','خاطئ ❌');
